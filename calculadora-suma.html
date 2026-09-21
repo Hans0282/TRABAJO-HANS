@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Suma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f4f8;
+            padding: 20px;
+            color: #1a202c;
+        }
+
+        .calculadora {
+            background: #fff;
+            padding: 44px 36px;
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 340px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitulo {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 28px;
+        }
+
+        .campo {
+            margin-bottom: 14px;
+        }
+
+        .campo label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+            color: #1a202c;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        input[type="number"]::placeholder {
+            color: #a0aec0;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2b6cb0;
+        }
+
+        button:active {
+            background: #2c5282;
+        }
+
+        #resultado {
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            min-height: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        #resultado.exito {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            border-color: #bee3f8;
+        }
+
+        #resultado.error {
+            background: #fff5f5;
+            color: #c53030;
+            border-color: #fed7d7;
+        }
+
+        #resultado small {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #718096;
+        }
+
+        /* ========== EFECTO 67 ========== */
+        #overlay67 {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #000;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #overlay67.activo {
+            display: block;
+        }
+
+        .lasers {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .laser {
+            position: absolute;
+            width: 4px;
+            height: 200%;
+            background: linear-gradient(to bottom, transparent, #ff00ff, #00ffff, transparent);
+            opacity: 0.7;
+            animation: laserMove 1.5s linear infinite;
+            transform-origin: center;
+        }
+
+        .laser:nth-child(1) { left: 10%; animation-delay: 0s; background: linear-gradient(to bottom, transparent, #ff0000, #ff00ff, transparent); }
+        .laser:nth-child(2) { left: 25%; animation-delay: 0.3s; background: linear-gradient(to bottom, transparent, #00ff00, #00ffff, transparent); }
+        .laser:nth-child(3) { left: 40%; animation-delay: 0.6s; background: linear-gradient(to bottom, transparent, #ffff00, #ff00ff, transparent); }
+        .laser:nth-child(4) { left: 55%; animation-delay: 0.2s; background: linear-gradient(to bottom, transparent, #00ffff, #ff00ff, transparent); }
+        .laser:nth-child(5) { left: 70%; animation-delay: 0.5s; background: linear-gradient(to bottom, transparent, #ff00ff, #ffff00, transparent); }
+        .laser:nth-child(6) { left: 85%; animation-delay: 0.1s; background: linear-gradient(to bottom, transparent, #00ff00, #ff0000, transparent); }
+
+        @keyframes laserMove {
+            0% { transform: translateY(-50%) rotate(15deg); }
+            100% { transform: translateY(50%) rotate(-15deg); }
+        }
+
+        .numeros-gigantes {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4vw;
+            pointer-events: none;
+        }
+
+        .numero-g {
+            font-size: 40vw;
+            font-weight: 800;
+            line-height: 1;
+            color: #fff;
+            text-shadow:
+                0 0 20px #ff00ff,
+                0 0 40px #ff00ff,
+                0 0 80px #00ffff,
+                0 0 120px #ff00ff;
+            animation: pulso 0.6s ease-in-out infinite alternate;
+        }
+
+        .numero-g:nth-child(2) {
+            animation-delay: 0.3s;
+            text-shadow:
+                0 0 20px #00ffff,
+                0 0 40px #00ffff,
+                0 0 80px #ff00ff,
+                0 0 120px #00ffff;
+        }
+
+        @keyframes pulso {
+            from { transform: scale(1); filter: brightness(1); }
+            to { transform: scale(1.08); filter: brightness(1.3); }
+        }
+
+        .mensaje-67 {
+            position: absolute;
+            bottom: 12%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: clamp(24px, 6vw, 48px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.15em;
+            text-shadow:
+                0 0 10px #ff00ff,
+                0 0 30px #00ffff,
+                0 0 60px #ff00ff;
+            animation: parpadeo 0.4s steps(2) infinite;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .cerrar-hint {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .particulas {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particula {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+            animation: flotar 3s linear infinite;
+        }
+
+        @keyframes flotar {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculadora">
+        <h1>Calculadora de Suma</h1>
+        <p class="subtitulo">Ingresa dos números</p>
+
+        <div class="campo">
+            <label for="num1">Primer número</label>
+            <input type="number" id="num1" placeholder="0" step="any">
+        </div>
+
+        <div class="campo">
+            <label for="num2">Segundo número</label>
+            <input type="number" id="num2" placeholder="0" step="any">
+        </div>
+
+        <button onclick="sumar()">Sumar</button>
+
+        <div id="resultado">El resultado aparecerá aquí</div>
+    </div>
+
+    <!-- Overlay exagerado para el 67 -->
+    <div id="overlay67" onclick="cerrar67()">
+        <div class="lasers">
+            <div class="laser"></div>
+            <div class="laser"></div>
+            <div class="laser"></div>
+            <div class="laser"></div>
+            <div class="laser"></div>
+            <div class="laser"></div>
+        </div>
+        <div class="particulas" id="particulas"></div>
+        <div class="numeros-gigantes">
+            <div class="numero-g">6</div>
+            <div class="numero-g">7</div>
+        </div>
+        <div class="mensaje-67">SIIIX SEVEEEEN</div>
+        <div class="cerrar-hint">Click para cerrar</div>
+    </div>
+
+    <script>
+        function sumar() {
+            const num1 = parseFloat(document.getElementById("num1").value);
+            const num2 = parseFloat(document.getElementById("num2").value);
+            const resultadoDiv = document.getElementById("resultado");
+
+            if (isNaN(num1) || isNaN(num2)) {
+                resultadoDiv.className = "error";
+                resultadoDiv.innerHTML = "Ingresa números válidos";
+                return;
+            }
+
+            const suma = num1 + num2;
+            let mensajeExtra = "";
+
+            if (num1 === 1 && num2 === 1) {
+                mensajeExtra = "<small>Tan difícil es?</small>";
+            } else if (suma === 67) {
+                mensajeExtra = "<small>SIIIX SEVEEEEN</small>";
+                activar67();
+            } else if (Math.abs(suma) >= 1000000) {
+                mensajeExtra = "<small>Vaya que pides unas sumas</small>";
+            }
+
+            resultadoDiv.className = "exito";
+            resultadoDiv.innerHTML = `${num1} + ${num2} = <strong>${suma}</strong>${mensajeExtra}`;
+        }
+
+        function activar67() {
+            const overlay = document.getElementById("overlay67");
+            const particulas = document.getElementById("particulas");
+            particulas.innerHTML = "";
+
+            // Crear partículas
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement("div");
+                p.className = "particula";
+                p.style.left = Math.random() * 100 + "%";
+                p.style.animationDelay = Math.random() * 3 + "s";
+                p.style.animationDuration = (2 + Math.random() * 3) + "s";
+                particulas.appendChild(p);
+            }
+
+            overlay.classList.add("activo");
+        }
+
+        function cerrar67() {
+            document.getElementById("overlay67").classList.remove("activo");
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                sumar();
+            }
+            if (event.key === "Escape") {
+                cerrar67();
+            }
+        });
+    </script>
+</body>
+</html>
